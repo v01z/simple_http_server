@@ -1,0 +1,41 @@
+cmake_minimum_required(VERSION 3.26)
+project(simple_http_server2)
+
+set(CMAKE_CXX_STANDARD 17)
+include(ExternalProject)
+
+ExternalProject_Add(libhttpserver
+        DOWNLOAD_DIR ${CMAKE_CURRENT_BINARY_DIR}
+        URL https://github.com/etr/libhttpserver/archive/refs/tags/0.19.0.tar.gz
+
+        UPDATE_COMMAND ./bootstrap
+        BUILD_IN_SOURCE 1
+        PATCH_COMMAND mkdir -p build
+        CONFIGURE_COMMAND cd ./build && ../configure
+        BUILD_COMMAND cd ./build && make
+        INSTALL_COMMAND cp build/src/.libs/libhttpserver.so.0.19.0 ${CMAKE_CURRENT_BINARY_DIR}
+)
+
+message("**************** begin ***********************************************")
+
+ExternalProject_Get_property(libhttpserver SOURCE_DIR)
+message("Source dir of libhttpserver = ${SOURCE_DIR}")
+
+ExternalProject_Get_property(libhttpserver BINARY_DIR)
+message("Build dir of libhttpserver = ${BINARY_DIR}")
+
+ExternalProject_Get_property(libhttpserver INSTALL_DIR)
+message("Install dir of libhttpserver = ${INSTALL_DIR}")
+
+message("**************** end *************************************************")
+
+#add_library(libhttpserver STATIC IMPORTED)
+#set_target_properties(libpthread PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/libhttpserver.so.0.19.0)
+#set_target_properties(libpthread PROPERTIES INTERFACE_INCLUDE_DIRECTORIES /usr/include)
+
+add_executable(simple_http_server2 main.cpp)
+#target_link_libraries(simple_http_server2 STATIC libhttpserver)
+#target_link_libraries(simple_http_server2 libhttpserver)
+target_link_libraries(simple_http_server2 libhttpserver.so.0.19.0)
+target_include_directories(simple_http_server2 PUBLIC
+        /home/baxik/coding/cpp/simple_http_server2/cmake-build-debug/libhttpserver-prefix/src/libhttpserver/src)
