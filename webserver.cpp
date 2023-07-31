@@ -11,7 +11,7 @@
             // Get info about client:
             std::cout << "\n******** Getting info about client: ********\n";
             std::cout << "\n\nGetting header:\n";
-            std::map<std::string, std::string, http::header_comparator> headers = 
+            std::map<std::string_view, std::string_view, http::header_comparator> headers =
                 request.get_headers();
             for (const auto &elem : headers)
             {
@@ -31,7 +31,7 @@
             //End getting info about client
 
             //
-            std::string filename = request.get_path() == "/"?"index.html":request.get_path().substr(1, request.get_path().length() - 1);
+            std::string filename { request.get_path() == "/"?"index.html":request.get_path().substr(1, request.get_path().length() - 1) };
             std::cout << "\nFilename is: " << filename << std::endl;
 
             std::string mime_str = filename == "index.html"?"text/html":"text/css";
