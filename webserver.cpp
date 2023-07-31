@@ -10,7 +10,7 @@
             // Get info about client:
             std::cout << "\n******** Getting info about client: ********\n";
             std::cout << "\n\nGetting header:\n";
-            std::map<std::string, std::string, http::header_comparator> headers = 
+            std::map<std::string_view, std::string_view, http::header_comparator> headers =
                 request.get_headers();
             for (const auto &elem : headers)
             {
